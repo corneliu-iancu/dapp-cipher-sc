@@ -6,7 +6,7 @@ publish = false
 authors = [ "you",]
 
 [lib]
-path = "src/swap.rs"
+path = "src/lib.rs"
 
 [dependencies.elrond-wasm]
 version = "0.30.0"
