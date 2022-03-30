@@ -12,6 +12,8 @@ elrond_wasm_node::wasm_endpoints! {
         claimRoyaltiesFromMarketplace
         createNft
         getLockedEgldBalance
+        getMintingPrice
+        getMintingRatio
         getNftPrice
         getNftTokenId
         getWrappedEgldTokenIdentifier

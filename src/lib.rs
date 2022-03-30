@@ -12,7 +12,11 @@ pub struct ExampleAttributes {
     pub creation_timestamp: u64,
 }
 
-const DEFAULT_TOKEN_DECIMALS_VALUE: u64 = 1_000_000_000_000_000_000;
+const DEFAULT_TOKEN_DECIMALS_VALUE: u64 = 1_000_000_000_000_000_000; // 1 EGLD.
+
+const DEFAULT_ESDT_RATIO_VALUE: u64 = 5_000_000; // this means 50.000 coins.
+
+const DEFAULT_EGLD_MINT_COST_VALUE: u64 = DEFAULT_TOKEN_DECIMALS_VALUE / 100; // 0.01EGLD ~ $2.2
 
 #[elrond_wasm::contract]
 pub trait EsdtNftContract: swap_module::EgldEsdtSwap + nft_module::NftModule {
@@ -33,9 +37,12 @@ pub trait EsdtNftContract: swap_module::EgldEsdtSwap + nft_module::NftModule {
         #[var_args] opt_token_used_as_payment: OptionalValue<TokenIdentifier>,
         #[var_args] opt_token_used_as_payment_nonce: OptionalValue<u64>,
     ) {
+        let tx_cost = self.get_minting_price();
+        
         let (payment_amount, payment_token) = self.call_value().payment_token_pair();
         require!(payment_token.is_egld(), "Only EGLD accepted");
-        require!(payment_amount == DEFAULT_TOKEN_DECIMALS_VALUE, "Payment must be equal to 1 EGLD");
+        // that means a 0.01 EGLD 
+        require!(payment_amount == tx_cost, "Payment must be equal to 0.01 EGLD");
 
         let token_used_as_payment = match opt_token_used_as_payment {
             OptionalValue::Some(token) => token,
@@ -67,6 +74,23 @@ pub trait EsdtNftContract: swap_module::EgldEsdtSwap + nft_module::NftModule {
             token_used_as_payment,
             token_used_as_payment_nonce,
         );
+
+        let wrapped_egld_token_id = self.wrapped_egld_token_id().get();
+
+        self.send()
+            .esdt_local_mint(&wrapped_egld_token_id, 0, &(&payment_amount * self.get_mint_ratio()));
+        
+        let caller = self.blockchain().get_caller();
+        
+        self.send()
+            .direct(
+                &caller,
+                &wrapped_egld_token_id,
+                0,
+                &(&payment_amount * self.get_mint_ratio()), // payment amount.
+                &[]
+            )
+        ;
     }
 
     // The marketplace SC will send the funds directly to the initial caller, i.e. the owner
@@ -92,6 +116,16 @@ pub trait EsdtNftContract: swap_module::EgldEsdtSwap + nft_module::NftModule {
         &self,
         sc_address: ManagedAddress,
     ) -> nft_marketplace_proxy::Proxy<Self::Api>;
+
+    #[view(getMintingPrice)]
+    fn get_minting_price(&self) -> u64 {
+        DEFAULT_EGLD_MINT_COST_VALUE
+    }
+
+    #[view(getMintingRatio)]
+    fn get_mint_ratio(&self) -> u64 {
+        DEFAULT_ESDT_RATIO_VALUE // Ratio of EGLD to ESDT Token ( which will affect price of the esdt. )
+    }
 }
 
 mod nft_marketplace_proxy {
