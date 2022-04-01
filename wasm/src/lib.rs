@@ -16,11 +16,16 @@ elrond_wasm_node::wasm_endpoints! {
         getMintingRatio
         getNftPrice
         getNftTokenId
+        getWhitelist
+        getWhitelistStart
+        getWhitelistStatus
         getWrappedEgldTokenIdentifier
         issueToken
         issueWrappedEgld
         setLocalRoles
         setNftLocalRoles
+        setWhitelist
+        setWhitelistStart
         unwrapEgld
         wrapEgld
     )

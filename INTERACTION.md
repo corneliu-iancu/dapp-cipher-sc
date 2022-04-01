@@ -44,3 +44,10 @@ Translated
 
 ### wrapped_egld_token_id - view
 `erdpy contract call erd1qqqqqqqqqqqqqpgqwp9mxc0eayzwvv3wac5uc0krafp8skctdpqs8jj0lx --chain=T --proxy=https://testnet-gateway.elrond.com --recall-nonce --function=getWrappedEgldTokenIdentifier --gas-limit=75000000 --pem=wallets/newusers/black.pem --send`
+
+
+#### is_white_listed - view
+`erdpy contract call erd1qqqqqqqqqqqqqpgqwp9mxc0eayzwvv3wac5uc0krafp8skctdpqs8jj0lx --chain=T --proxy=https://testnet-gateway.elrond.com --recall-nonce --function=getWhitelistStatus --gas-limit=60000000 --pem=wallets/newusers/black.pem --send`
+
+#### setWhitelistStart - endpoints: Sets whitelist start to current timestamp.
+`erdpy contract call erd1qqqqqqqqqqqqqpgqwp9mxc0eayzwvv3wac5uc0krafp8skctdpqs8jj0lx --chain=T --proxy=https://testnet-gateway.elrond.com --recall-nonce --function=setWhitelistStart --gas-limit=50000000 --pem=wallets/newusers/black.pem --send`

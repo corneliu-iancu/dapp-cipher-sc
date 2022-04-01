@@ -7,6 +7,8 @@ mod swap_module;
 
 mod nft_module;
 
+mod whitelist_module;
+
 #[derive(TypeAbi, TopEncode, TopDecode)]
 pub struct ExampleAttributes {
     pub creation_timestamp: u64,
@@ -19,7 +21,7 @@ const DEFAULT_ESDT_RATIO_VALUE: u64 = 5_000_000; // this means 50.000 coins.
 const DEFAULT_EGLD_MINT_COST_VALUE: u64 = DEFAULT_TOKEN_DECIMALS_VALUE / 100; // 0.01EGLD ~ $2.2
 
 #[elrond_wasm::contract]
-pub trait EsdtNftContract: swap_module::EgldEsdtSwap + nft_module::NftModule {
+pub trait EsdtNftContract: swap_module::EgldEsdtSwap + nft_module::NftModule + whitelist_module::WhitelistModule {
     #[init]
     fn init(&self) {}
 
