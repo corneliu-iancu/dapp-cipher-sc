@@ -24,9 +24,9 @@ elrond_wasm_node::wasm_endpoints! {
         issueWrappedEgld
         setLocalRoles
         setNftLocalRoles
-        setWhitelist
         setWhitelistStart
         unwrapEgld
+        whitelist
         wrapEgld
     )
 }

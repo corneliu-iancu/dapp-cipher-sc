@@ -147,7 +147,7 @@ pub trait EgldEsdtSwap {
     }
 
     // storage
-
+    //@TODO: rename to esdtIdentifer.
     #[view(getWrappedEgldTokenIdentifier)]
     #[storage_mapper("wrappedEgldTokenId")]
     fn wrapped_egld_token_id(&self) -> SingleValueMapper<TokenIdentifier>;

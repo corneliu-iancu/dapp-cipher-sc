@@ -14,23 +14,44 @@ pub struct ExampleAttributes {
     pub creation_timestamp: u64,
 }
 
-const DEFAULT_TOKEN_DECIMALS_VALUE: u64 = 1_000_000_000_000_000_000; // 1 EGLD.
+const DEFAULT_EGLD_DECIMALS_VALUE: u64 = 1_000_000_000_000_000_000; // 1 EGLD.
 
-const DEFAULT_ESDT_RATIO_VALUE: u64 = 5_000_000; // this means 50.000 coins.
+// todo: fix me, would be something like 10mil coins to 1 egld.
+//       economics should solve this number.
+const DEFAULT_ESDT_RATIO_VALUE: u64 = 10_000; // this means 10.000 coins to 1 EGLD.
 
-const DEFAULT_EGLD_MINT_COST_VALUE: u64 = DEFAULT_TOKEN_DECIMALS_VALUE / 100; // 0.01EGLD ~ $2.2
+const DEFAULT_EGLD_MINT_COST_VALUE: u64 = 10_000_000_000_000_000; // 0.01EGLD ~ $2.2
+
+const DEFAULT_WHITELIST_REWARD: u64 = 10_000; // 10.000 coins.
 
 #[elrond_wasm::contract]
 pub trait EsdtNftContract: swap_module::EgldEsdtSwap + nft_module::NftModule + whitelist_module::WhitelistModule {
     #[init]
     fn init(&self) {}
 
+    #[endpoint(whitelist)]
+    fn whitelist_action(&self) {
+        self.set_whitelist();
+        let caller = self.blockchain().get_caller();
+        let esdt_token_id = self.wrapped_egld_token_id().get();
+        self.send()
+            .esdt_local_mint(&esdt_token_id, 0, &(BigUint::from(DEFAULT_WHITELIST_REWARD) * DEFAULT_EGLD_DECIMALS_VALUE));
+        self.send()
+            .direct(
+                &caller,
+                &esdt_token_id,
+                0,
+                &(BigUint::from(DEFAULT_WHITELIST_REWARD) * DEFAULT_EGLD_DECIMALS_VALUE), // whitelist reward amount.
+                &[]
+            );
+    }
+
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::redundant_closure)]
     // #[only_owner]
     #[payable("EGLD")]
     #[endpoint(createNft)]
-    fn create_nft(
+    fn create_nft_action(
         &self,
         name: ManagedBuffer,
         royalties: BigUint,

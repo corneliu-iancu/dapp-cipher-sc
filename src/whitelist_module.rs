@@ -30,17 +30,23 @@ pub trait WhitelistModule {
     //BigUint::from(1u32) + BigUint::from(1u32)
   }
 
-  #[endpoint(setWhitelist)]
+  // #[endpoint(setWhitelist)]
   fn set_whitelist(&self) {
-      // let (payment, token) = self.call_value().payment_token_pair();
       let caller = self.blockchain().get_caller();
-      let one = BigUint::from(1u32);
+      let one = BigUint::from(1u32); // One.
       self.whitelist(&caller).update(|whitelist| *whitelist += one);
   }
 
+  // @todo: rename this in order to be able to query whitelist transactions.
   #[endpoint(setWhitelistStart)]
   fn set_whitelist_start(&self) {
-    self.whitelist_start().set(self.blockchain().get_block_timestamp() + 3600 * 24);
+    let week = 3600 * 24 * 7; // 7 days
+    let day = 3600 * 24;
+    if self.whitelist_start().get() < self.blockchain().get_block_timestamp() {
+      self.whitelist_start().set(self.blockchain().get_block_timestamp() + day);
+    } else {
+      self.whitelist_start().set(self.whitelist_start().get() + week);
+    }
   }
 
 
