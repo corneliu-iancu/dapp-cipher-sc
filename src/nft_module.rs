@@ -155,6 +155,8 @@ pub trait NftModule {
         royalties: BigUint,
         attributes: T,
         uri: ManagedBuffer,
+        uri_json: ManagedBuffer,
+        collection_json: ManagedBuffer,
         selling_price: BigUint,
         token_used_as_payment: TokenIdentifier,
         token_used_as_payment_nonce: u64,
@@ -175,7 +177,10 @@ pub trait NftModule {
             .crypto()
             .sha256_legacy_managed::<1000>(&serialized_attributes);
         let attributes_hash = attributes_sha256.as_managed_buffer();
-        let uris = ManagedVec::from_single_item(uri);
+        let mut uris = ManagedVec::new();
+        uris.push(uri);
+        uris.push(uri_json);
+        uris.push(collection_json);
         let nft_nonce = self.send().esdt_nft_create(
             &nft_token_id,
             &BigUint::from(NFT_AMOUNT),
