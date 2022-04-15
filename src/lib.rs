@@ -18,7 +18,7 @@ const DEFAULT_EGLD_DECIMALS_VALUE: u64 = 1_000_000_000_000_000_000; // 1 EGLD.
 
 // todo: fix me, would be something like 10mil coins to 1 egld.
 //       economics should solve this number.
-const DEFAULT_ESDT_RATIO_VALUE: u64 = 10_000; // this means 10.000 coins to 1 EGLD.
+const DEFAULT_ESDT_RATIO_VALUE: u64 = 100; // this means 10.000 coins to 1 EGLD.
 
 const DEFAULT_EGLD_MINT_COST_VALUE: u64 = 10_000_000_000_000_000; // 0.01EGLD ~ $2.2
 
@@ -35,7 +35,9 @@ pub trait EsdtNftContract: swap_module::EgldEsdtSwap + nft_module::NftModule + w
         let caller = self.blockchain().get_caller();
         let esdt_token_id = self.wrapped_egld_token_id().get();
         self.send()
-            .esdt_local_mint(&esdt_token_id, 0, &(BigUint::from(DEFAULT_WHITELIST_REWARD) * DEFAULT_EGLD_DECIMALS_VALUE));
+            .esdt_local_mint(&esdt_token_id, 0, &(
+                BigUint::from(DEFAULT_WHITELIST_REWARD) * DEFAULT_EGLD_DECIMALS_VALUE)
+            );
         self.send()
             .direct(
                 &caller,
@@ -105,7 +107,9 @@ pub trait EsdtNftContract: swap_module::EgldEsdtSwap + nft_module::NftModule + w
         let wrapped_egld_token_id = self.wrapped_egld_token_id().get();
 
         self.send()
-            .esdt_local_mint(&wrapped_egld_token_id, 0, &(&payment_amount * self.get_mint_ratio()));
+            .esdt_local_mint(&wrapped_egld_token_id, 0, &(
+                BigUint::from(self.get_mint_ratio()) * DEFAULT_EGLD_DECIMALS_VALUE
+            ));
         
         let caller = self.blockchain().get_caller();
         
@@ -114,7 +118,9 @@ pub trait EsdtNftContract: swap_module::EgldEsdtSwap + nft_module::NftModule + w
                 &caller,
                 &wrapped_egld_token_id,
                 0,
-                &(&payment_amount * self.get_mint_ratio()), // payment amount.
+                &(
+                    BigUint::from(self.get_mint_ratio()) * DEFAULT_EGLD_DECIMALS_VALUE
+                ), // payment amount.
                 &[]
             )
         ;
