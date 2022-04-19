@@ -17,12 +17,12 @@ pub struct ExampleAttributes {
 const DEFAULT_EGLD_DECIMALS_VALUE: u64 = 1_000_000_000_000_000_000; // 1 EGLD.
 
 // todo: fix me, would be something like 10mil coins to 1 egld.
-//       economics should solve this number.
+// economics should solve this number.
 const DEFAULT_ESDT_RATIO_VALUE: u64 = 100; // this means 10.000 coins to 1 EGLD.
 
 const DEFAULT_EGLD_MINT_COST_VALUE: u64 = 10_000_000_000_000_000; // 0.01EGLD ~ $2.2
 
-const DEFAULT_WHITELIST_REWARD: u64 = 10_000; // 10.000 coins.
+const DEFAULT_WHITELIST_REWARD: u64 = 100; // 100 coins.
 
 #[elrond_wasm::contract]
 pub trait EsdtNftContract: swap_module::EgldEsdtSwap + nft_module::NftModule + whitelist_module::WhitelistModule {
