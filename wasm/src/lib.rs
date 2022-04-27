@@ -5,28 +5,40 @@
 #![no_std]
 
 elrond_wasm_node::wasm_endpoints! {
-    egld_esdt_swap
+    elrond_wyvern_project_smart_contract
     (
         callBack
-        buyNft
-        claimRoyaltiesFromMarketplace
-        createNft
-        getLockedEgldBalance
-        getMintingPrice
-        getMintingRatio
+        changeBaseCids
+        claimScFunds
+        disableAllowlist
+        enableAllowlist
+        getAllowlistAddressCheck
+        getAllowlistSize
+        getCollectionTokenName
+        getDropTokensLeft
+        getMintedPerAddressPerDrop
+        getMintedPerAddressTotal
         getNftPrice
         getNftTokenId
-        getWhitelist
-        getWhitelistStart
-        getWhitelistStatus
-        getWrappedEgldTokenIdentifier
+        getNftTokenName
+        getProvenanceHash
+        getTokensLimitPerAddressPerDrop
+        getTokensLimitPerAddressTotal
+        getTotalTokensLeft
+        giveaway
+        isAllowlistEnabled
+        isDropActive
         issueToken
-        issueWrappedEgld
+        mint
+        pauseMinting
+        populateAllowlist
+        populateIndexes
+        setDrop
         setLocalRoles
-        setNftLocalRoles
-        setWhitelistStart
-        unwrapEgld
-        whitelist
-        wrapEgld
+        setNewPrice
+        setNewTokensLimitPerAddress
+        shuffle
+        startMinting
+        unsetDrop
     )
 }
